@@ -1,0 +1,492 @@
+
+#include<iostream>
+#include<winsock.h>
+#include <fstream>
+#include <tchar.h>
+
+#pragma comment(lib,"ws2_32.lib")
+using namespace std;
+void initialization();
+
+#define SerialNumberMax 150
+char SerialNumberTable[SerialNumberMax][100] = {
+	"50026B7282C18DBD",
+	"0000_0000_0000_0000_707C_1800_0002_3921.",
+	"0000_0000_0100_0000_E4D2_5CAB_A22F_4C00.", //Rain
+	"0000_0000_0100_0000_E4D2_5C38_799F_5401.", //Rain2
+	"2K1220077596        _00000001.", //Rain3
+	"0000_0000_0100_0000_E4D2_5C26_C2CE_5201.", //Rain4
+	"6479_A756_9050_08DF.", // 閃
+	"ZFN1DW7J", //教練
+	"ZN1RAPYW", // 韋登 3/8
+	"WD-WCC3F4YZ43FF", // 韋登2 3/8
+
+	"S4BENG0KB36545Z", // ChingHsiu
+	"98BNHP3AS", //清越
+	"3035323042363737433634303835464420202020", //痞子倫
+	"2020202057202d4443573643", //痞子倫2
+	"JS1000620LXSTS", //痞子倫3
+	"50026B7782DFA8BC", //狗幻
+	"16421457CB8B", // 狗幻公司
+	"P02614193302", // 電台
+	"0000_0000_0100_0000_E4D2_5CB6_F1B6_5201.", // 維維
+	"19ADJXTAS", // Hello
+	"WD-WMC3F2155232", // ROGER
+	"D067962273", // 腦轉
+	"WD-WCC6Y6LF21AF", // 道雪
+	"1510F003E129", // 道雪2
+	"WD-WCC6Y2ZHRK1C", // 張庭偉
+	"CVLT624401FC240CGN", // 張庭偉2
+	"WD-WX12AB12HDE5", // 張庭偉3
+	"1815E1367431", // TOP
+	"ZCT0KH5S", // 國王豬
+	"11CNMK0NS", // 九九
+	"WD-WCC6Y0JPUNC2", // 彧林
+	"0000_0000_0000_0001_00A0_7522_3445_F838.", // 彧林 筆電
+	"Z9APAMD3", // 吳先生1
+	"1907E1EA5143", // 吳先生2
+	"0000_0000_0000_0001_8CE3_8E10_0007_822D.", // 吳先生3 筆電
+	"WD-WCC6Y2HJLC9U", // 黑玉
+	"50026B7682DD0A37", // 扯淡
+	"50026B7766049777", // 吳先生3
+	"Z9ALZ2FK", // 帶帶
+	"JR10006P34GETF", // 商機
+	"Z4ZATWC3", // 洪詩
+	"6479_A749_A000_00EF.", // 小夜
+	"1907E1EA4F94", // 全木
+	"0I4120001197", // 油油
+	"2I3720006792", // 油油朋友
+	"6479_A75F_D000_0002.", // 油油朋友小胖
+	"0026_B768_3717_18B5.", // 阿峰
+	"N400C1J44A163A", // 不點
+	"86183378E43936250019", // 油油另一台電腦
+	"S32XJ9CH111643", // 夜大人
+	"172401A0149B", // 人情
+	"38NCWGSET", // 公司電腦
+	"Falcon", // Eric Liao
+	"0000_0000_0100_0000_E4D2_5C46_2C3F_5401.", //萬萬
+	"WD-WCC3F7YPXPNZ", //來登
+	"0026_B768_4278_4545.", // 來登換電腦
+	"E823_8FA6_BF53_0001_001B_448B_41E0_86E6.", //來登公司電腦
+	"472AM32FS", // 大哥
+	"BTLA73350G8S256CGN", // 蔡小書
+	"S4BENG0KB36545Z", // 藏
+	"38EYK9S3F", // 痕仇
+	"E823_8FA6_BF53_0001_001B_448B_45F5_97BB.", //全德勒
+	"Z9APAMD3", // 吳先生4
+	"E823_8FA6_BF53_0001_001B_444A_4686_F27D.",
+
+	// 乞買正服
+	"Z4Y7S91Q", // 無心插柳
+	"50026B725502E48A", // 無心插柳2
+
+	//"985GT7XFS", //溺水的魚
+
+	// 寶寶朋友
+	"S414NB0K604605T", //寶寶
+	"2211E61C6B57", // 阿偉 iRobotRoomba890
+
+
+	"E823_8FA6_BF53_0001_001B_444A_4686_F27D.", // 姊姊
+	
+	// OV
+	"ZN190FAN", // 周生 勛 12/16
+	"WD-WCC6Y2VDZPU7", // 大師 Dennis 12/16
+
+
+	// 查爾斯
+	"NJ87N697311207S5K   _00000001.", // Jason
+	"3536393437303839363038303030313331313134",  //fadeaway
+	//"50026B776A06B20C", // Yu 10/12
+
+	// 魯夫朋友
+	"E823_8FA6_BF53_0001_001B_444A_46B1_A3F8.", //魯夫02
+	"0025_3858_11B1_1583.", // 魯夫筆電
+	"TPBF2104290080103785",  //肥肥鮪魚肚
+	"CVTR539309Q0240CGN  ", //阿準
+	"0025_38BB_11B4_1242.", // 尼兇
+	"0000_0000_0100_0000_E4D2_5CE4_E81F_5101.", // 倘若那天
+	"1823E1426A06", // 盧盧嗯
+	"Z4Y2LJ0D", // 致命鮑烈 愛上你算偉健
+	"0026_B768_3C21_1605.", // 瀟湘淚
+	"E823_8FA6_BF53_0001_001B_448B_46AC_0126.", // 無心插柳
+	"1914_0380_2632_0001_001B_448B_44E2_6308.", // 歡樂今宵
+	"0000_0000_0100_0000_E4D2_5C10_C01F_5101.", //魯夫01
+	"50026B778207E8E6    ", // 乞 Dearest
+	"001B_448B_46DB_2251.", // 比電 Fool-around
+	"1823E1426A06", // 小皇人
+
+	// 私服
+	"324C_3435_3239_3235_00E0_4C72_08C0_9789.", // Kang 小康 2/15
+	"E823_8FA6_BF53_0001_001B_448B_4681_599F.", //余紀煬 2/15
+	// 愛麗莎
+	"50026B7782A82A60", // 筍 1/24
+	"Z4Y99BRF", // 林小民 1/25
+	"KN1280L0167110164AHC", // Jurno 2/1
+	// 繁星
+	"1850E1DCFBE1", //晏辰
+    "WL1E6X6Q", // Kel 12/6
+	"50026B768300D3FC", // 念瑋 11/19
+	"0000_0000_0100_0000_E4D2_5CF0_2B68_5101.", // Sora 11/19
+	"010291F9E18292910330", // 沐白小哥哥. 11/10
+    "TL01CU0614WL", // Li yu xuan 10/26
+	"2I0120040150", // 蔡俊英2 10/25
+	"0000_0000_0100_0000_E4D2_5C19_8567_5401.", // 蔡俊英 10/7
+	//"N400B1J39A2128", // 佳哲 3/3
+	// 光雨
+	"165165800030", // Peter 3/5
+	//"50026B726308D6B8", // 銘 4/2
+	"1903E16DF594", // 建勛 5/26
+	"0000_0000_0000_0001_00A0_7521_316D_4551.", // 魏 3/14
+	//"0000_0000_0100_0000_00E0_4C04_80C5_8FEF.", // 浩恩 3/15
+	"201912A00AB1", // 瑄
+	// 陸仔
+	"WD-WCC6Y0CR8LFK", //朋友1
+	"0025_3852_9151_E99F.", //朋友2
+	"AA000000000000000277", // 朋友3
+	"WD-WCC6Y5NT3SZ2", // 朋友4
+	"0026_B768_231B_B365.", // Wing 01
+	"AA000000000000007042", // Wing 02
+	// 陸仔雅典娜
+	"E823_8FA6_BF53_0001_001B_448B_463D_152E.", // E823_8FA6_BF53_0001_001B_448B_463D_152E.
+	// 軟萌
+	"3135313130363039303530373130383333372020",
+	//"BTLT6375022U240CGN", // 雅樂 3/14
+	// 夏夜
+	"AGISAMTSE0900208", // 韋 4/9
+	"0000_0000_0100_0000_E4D2_5C3D_560F_5101.", // 林柏承 4/25
+	"E823_8FA6_BF53_0001_001B_448B_494F_627E.", // Wayne緯 05/29
+	// 雲雪
+	"50026B725703D749", //Wu Yi-Tsun 3/17"
+	// 克拉
+	"45LKK0YNS", // 唐欸 6/3
+	"ZFL51PGB", // 唐欸 6/3
+	"50026B778335BB30", // 啊國 6/3
+	// 麗芙
+	"39PFPN12T", // Jurno 4/24
+	// 米爾
+	"WD-WCC6Y4UL6Z11", // 大帥哥 6/23
+	// OPHGRO
+	//"21062CCDDD31", // 俊憲 4/27 一週
+	//  雪
+	//"48PT5HENS", // 阿強 7/10
+	"N400B1J31A16E8", // 林士楚 9/12
+	//"03346207E105650E0346", // 阿翰Han 9/27
+	// 締造
+		"0000_0000_0000_0000_707C_1802_4429_170D.", // 阿維 3/3
+		"2J0320049326", // 睿芸 2/28
+	"0026_B768_2921_0A95.", // Eric 8/15
+		"WD-WXL1AC9583ZT", // Allen張軒豪 2/27
+	"0000_0000_0000_0000_0026_B768_4E64_EB55.", // 顏晟世 8/19
+	"0000_0000_0000_0001_8CE3_8E03_0031_33AA.", // 明諺：D 09/21
+	"0000_0000_0000_0010_0008_0D03_001A_AB90.", // 明諺公司：D 09/21
+	// 雨果
+	"CVTR52450194240CGN  ", // 吳俊佑 3/8
+	"AA000000000000001722", // pklam 10/30
+	"CVLT61550786240CGN", // 志安 10/11
+	"2149E5EC8B7F", // 劉川正 Jerry 10/7
+	//"WD-WCC6Y4NEAL5P", // 扣大陸朋友 7/18
+	//"ACE4_2E00_1A78_92DF_2EE4_AC00_0000_0001.", // Nick 7/15
+	//"E823_8FA6_BF53_0001_001B_448B_454D_9556.", // 林佳慶 7/15
+	"E823_8FA6_BF53_0001_001B_444A_4987_6100.", // 鄭翔仁 7/5
+	//"2L492LQ5S4X1", // 育. 7/5
+	"WL13PJQP", // YiChun 6/26
+	//"WD-WCC2ED541301" , // 修修 6/12
+	//"99R3PYJJT", // 修修 6/12
+	"0025_38A1_11B3_4462.", // 全村的希望 6/13
+	"2K4529C9DC2W        _00000001.", // 杜 5/8
+	"ZN1K0Y3K", // 朝漢 3/5
+	"ZN1K020J", // 洢洢 5/29
+	"CVLT630601JW480EGN", // 迪西 5/15
+	"Z4X0H4GY", // Puma 05/31
+	//"WD-WCC6Y7JEL4AJ", // Jingxuan 6/21
+	"20151001C4969604410E", // 李紘緯 6/24
+	"0000_0000_0000_0000_0026_B768_4D9C_E295.", // 僑森蔡梓傑 6/14
+	"WD-WX61AA7RJ1RR", // Mo/ 7/6
+	"324C_3233_3239_4139_00E0_4C78_BBC0_19F7.", // 融扣 4/8
+	"1951E2301E98", // Chun 8/1
+};
+
+
+BOOL ClientConnect(SOCKET* s_accept);
+
+int main() {
+	//定义长度变量
+	int send_len = 0;
+	int recv_len = 0;
+	int len = 0;
+	//定义发送缓冲区和接受缓冲区
+	char send_buf[100];
+	char recv_buf[100];
+	//定义服务端套接字，接受请求套接字
+	SOCKET s_server;
+	SOCKET s_accept;
+	//服务端地址客户端地址
+	SOCKADDR_IN server_addr;
+	SOCKADDR_IN accept_addr;
+	initialization();
+	//填充服务端信息
+	server_addr.sin_family = AF_INET;
+	server_addr.sin_addr.S_un.S_addr = htonl(INADDR_ANY);
+	server_addr.sin_port = htons(1234);
+	//创建套接字
+	s_server = socket(AF_INET, SOCK_STREAM, 0);
+	if (bind(s_server, (SOCKADDR*)&server_addr, sizeof(SOCKADDR)) == SOCKET_ERROR) {
+		cout << "套接字綁定失敗！" << endl;
+		WSACleanup();
+	}
+	else {
+		cout << "套接字綁定成功！" << endl;
+	}
+	//设置套接字为监听状态
+	if (listen(s_server, SOMAXCONN) < 0) {
+		cout << "設置監聽狀態失敗！" << endl;
+		WSACleanup();
+	}
+	else {
+		cout << "設置監聽狀態成功！" << endl;
+	}
+	while (1) {
+		//cout << "服務端正在監聽連接，請稍後...." << endl;
+		//接受连接请求
+		len = sizeof(SOCKADDR);
+		s_accept = accept(s_server, (SOCKADDR*)&accept_addr, &len);
+		if (s_accept == SOCKET_ERROR) {
+			cout << "連接失敗！" << endl;
+			WSACleanup();
+			//return 0;
+		}
+		//cout << "連接建立，準備接收數據" << endl;
+		CreateThread(NULL, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(ClientConnect), &s_accept, 0, 0);
+		//ClientConnect(s_accept);
+	}
+	
+	//关闭套接字
+	closesocket(s_server);
+	closesocket(s_accept);
+	//释放DLL资源
+	WSACleanup();
+	return 0;
+}
+
+BOOL ClientConnect(SOCKET* s_accept) {
+	int send_len = 0;
+	int recv_len = 0;
+	char send_buf[100];
+	char recv_buf[100];
+
+	int NameCheckSum = 0;
+	int SerialNumberCheckSum = 0;
+	int MapCheckSum = 0;
+	int HpCheckSum = 0;
+	int SpCheckSum = 0;
+	int MoneyCheckSum = 0;
+
+	int IsPriviteServer = 1; // 是否為私服
+	ofstream fout1(".\\TimeLog.txt", ios::app);   // Open the file
+	ofstream fout2(".\\TimePriviteLog.txt", ios::app);   // Open the file
+
+	SOCKET s_accept_ = *s_accept;
+
+	LPCTSTR charPath = _T(".\\ServerLog.txt");
+	char CharNameStr[24] = { "" };
+
+	char SerialNumber[100] = { "" };
+
+	char MapStr[24] = " 所在地圖";
+	char HpStr[24] = " 最大生命";
+	char SpStr[24] = " 最大魔力";
+	char MoneyStr[24] = " 擁有金錢";
+
+	//接收数据
+	while (1) {
+		recv_len = recv(s_accept_, recv_buf, 100, 0);
+		
+		if (recv_len < 0) {
+			cout << CharNameStr << " 斷開連線！" << endl;
+
+			break;
+		}
+		else {
+			char CombineMapStr[100] = "";
+			char CombineHpStr[100] = "";
+			char CombineSpStr[100] = "";
+			char CombineMoneyStr[100] = "";
+
+			int Verify = 0;
+			switch (recv_buf[0]) {
+			case 1:
+				cout << "角色名稱:" << recv_buf << endl;
+				strcpy_s(CharNameStr, &recv_buf[1]);
+
+				NameCheckSum++;
+				SerialNumberCheckSum = 0;
+				MapCheckSum = 0;
+				HpCheckSum = 0;
+				SpCheckSum = 0;
+				MoneyCheckSum = 0;
+
+				break;
+
+			case 2:
+				//cout << "序號:" << recv_buf << endl;
+
+				for (int SerialCount = 0; SerialCount < SerialNumberMax; SerialCount++) {
+					if (!strcmp(&recv_buf[1], SerialNumberTable[SerialCount])) {
+						Verify = 1;
+						strcpy_s(SerialNumber, &recv_buf[1]);
+						break;
+					}
+				}
+				if (Verify) {
+					cout << "序號:" << recv_buf << " 驗證成功!" << endl;
+					send_buf[0] = 49;
+					send_len = send(s_accept_, send_buf, 100, 0);
+					if (send_len < 0) {
+						cout << "發送失敗！" << endl;
+					}
+				}
+				else {
+					cout << "序號:" << recv_buf << " 驗證失敗!" << endl;
+					send_buf[0] = 48;
+					send_len = send(s_accept_, send_buf, 100, 0);
+					if (send_len < 0) {
+						cout << "發送失敗！" << endl;
+					}
+				}
+
+				NameCheckSum = 0;
+				SerialNumberCheckSum++;
+				MapCheckSum = 0;
+				HpCheckSum = 0;
+				SpCheckSum = 0;
+				MoneyCheckSum = 0;
+				break;
+
+			case 3:
+				cout << "所在地圖:" << recv_buf << endl;
+
+				strcpy_s(CombineMapStr, CharNameStr);
+				strcat_s(CombineMapStr, MapStr);
+				::WritePrivateProfileString(SerialNumber, CombineMapStr, &recv_buf[1], charPath); // 所在地圖
+				NameCheckSum = 0;
+				SerialNumberCheckSum = 0;
+				MapCheckSum++;
+				HpCheckSum = 0;
+				SpCheckSum = 0;
+				MoneyCheckSum = 0;
+				break;
+
+			case 4:
+				printf("最大生命: %s\n", &recv_buf[1]);
+
+				strcpy_s(CombineHpStr, CharNameStr);
+				strcat_s(CombineHpStr, HpStr);
+				::WritePrivateProfileString(SerialNumber, CombineHpStr, &recv_buf[1], charPath); // 最大生命
+				NameCheckSum = 0;
+				SerialNumberCheckSum = 0;
+				MapCheckSum = 0;
+				HpCheckSum++;
+				SpCheckSum = 0;
+				MoneyCheckSum = 0;
+				break;
+
+			case 5:
+				printf("最大魔力: %s\n", &recv_buf[1]);
+
+				strcpy_s(CombineSpStr, CharNameStr);
+				strcat_s(CombineSpStr, SpStr);
+				::WritePrivateProfileString(SerialNumber, CombineSpStr, &recv_buf[1], charPath); // 最大魔力
+				NameCheckSum = 0;
+				SerialNumberCheckSum = 0;
+				MapCheckSum = 0;
+				HpCheckSum = 0;
+				SpCheckSum++;
+				MoneyCheckSum = 0;
+
+				closesocket(s_accept_);
+				//
+				// 寫入開啟時間到TimeLog.txt
+				//
+				SYSTEMTIME sys;
+				GetLocalTime(&sys);
+
+				if (IsPriviteServer) {
+					fout2 << "最後上線時間: " << sys.wYear << "/" << sys.wMonth << "/" << sys.wDay << " " << sys.wHour << ":" << sys.wMinute << ":" << sys.wSecond << " " << SerialNumber << " " << CharNameStr << endl;
+				}
+				else {
+					fout1 << "最後上線時間: " << sys.wYear << "/" << sys.wMonth << "/" << sys.wDay << " " << sys.wHour << ":" << sys.wMinute << ":" << sys.wSecond << " " << SerialNumber << " " << CharNameStr << endl;
+				}
+				
+				break;
+
+			case 6:
+				printf("金錢: %s\n", &recv_buf[1]);
+				
+				strcpy_s(CombineMoneyStr, CharNameStr);
+				strcat_s(CombineMoneyStr, MoneyStr);
+				::WritePrivateProfileString(SerialNumber, CombineMoneyStr, &recv_buf[1], charPath); // 金錢
+				NameCheckSum = 0;
+				SerialNumberCheckSum = 0;
+				MapCheckSum = 0;
+				HpCheckSum = 0;
+				SpCheckSum = 0;
+				MoneyCheckSum++;
+
+				IsPriviteServer = 0; // 正服
+
+				//closesocket(s_accept_);
+				break;
+
+			default:
+				closesocket(s_accept_);
+				cout << "訊息:" << recv_buf << endl;
+				break;
+			}
+
+			// 檢驗是否有雜訊
+			if (NameCheckSum > 5 || SerialNumberCheckSum > 5 || MapCheckSum > 5 || HpCheckSum > 5 || SpCheckSum > 5 || MoneyCheckSum > 5) {
+				NameCheckSum = 0;
+				SerialNumberCheckSum = 0;
+				MapCheckSum = 0;
+				HpCheckSum = 0;
+				SpCheckSum = 0;
+				MoneyCheckSum = 0;
+				closesocket(s_accept_);
+			}
+			
+		}
+		//cout << "請輸入回覆訊息:";
+		//cin >> send_buf;
+
+	}
+
+	fout1.close();
+	fout2.close();
+
+	return EXIT_SUCCESS;
+}
+
+void initialization() {
+	//初始化套接字库
+	WORD w_req = MAKEWORD(2, 2);//版本号
+	WSADATA wsadata;
+	int err;
+	err = WSAStartup(w_req, &wsadata);
+	if (err != 0) {
+		cout << "初始化失敗！" << endl;
+	}
+	else {
+		cout << "初始化成功！" << endl;
+	}
+	//检测版本号
+	if (LOBYTE(wsadata.wVersion) != 2 || HIBYTE(wsadata.wHighVersion) != 2) {
+		cout << "版本錯誤！" << endl;
+		WSACleanup();
+	}
+	else {
+		cout << "版本正確！" << endl;
+	}
+	//填充服务端地址信息
+
+}
